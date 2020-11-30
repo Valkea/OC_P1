@@ -1,0 +1,5 @@
+venv
+*.csv
+*.swp
+__pycache__
+lab
