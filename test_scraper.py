@@ -284,6 +284,40 @@ class TestCategory:
         assert self.cat2.books[21].number_available == availability21
         assert self.cat2.books[39].review_rating == rate39
 
+    # --- CSV ---
+
+    def test_to_csv(self):
+        file = 'test-category'
+        self.cat2.to_csv(file)
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 66
+
+        os.remove(f'{file}.csv')
+
+    def test_to_csv_APPEND(self):
+        file = 'test-category'
+        self.cat2.to_csv(file)
+        self.cat2.to_csv(file)
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 131
+
+        os.remove(f'{file}.csv')
+
+    def test_to_csv_CREATE_new_file(self):
+        file = 'test-category'
+        self.cat2.to_csv(file)
+        self.cat2.to_csv(file)
+        self.cat2.to_csv(file, 'w')
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 66
+
+        os.remove(f'{file}.csv')
 
 ##################################################
 # Site

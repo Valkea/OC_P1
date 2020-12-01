@@ -259,6 +259,8 @@ class Category:
         -------
         collect()
             connect to the given url and collect the product data
+        to_csv(path='demo', mode='a')
+            write the content of the collected books in the given CSV
     """
 
     def __init__(self, url=None):
@@ -280,6 +282,37 @@ class Category:
         self.num_books = self.__scrap_num_books()
         self.links = self.__scrap_links()
         self.books = self.__scrap_books()
+
+    def to_csv(self, path='demo', mode='a'):
+        """ Write the collected books information to a given CSV file
+            Append if the file already exists
+
+        Parameters
+        ----------
+        path : str (default is 'demo')
+            The path including its name but without the extension to the csv file
+        mode : str (default is 'a')
+            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
+        """
+
+        if self.books == []:
+            self.collect()
+
+        addHeaders = False
+        if not os.path.exists(f'{path}.csv') or (mode != 'a' and mode != 'a+'):
+            addHeaders = True
+
+        with open(f"{path}.csv", mode, newline='') as csvfile:
+
+            fields = self.books[0].get_headers()
+            writer = csv.DictWriter(csvfile, fieldnames=fields)
+
+            if addHeaders:
+                headers = {fields[i]: fields[i] for i in range(len(fields))}
+                writer.writerow(headers)
+
+            for book in self.books:
+                writer.writerow(book.to_dict())
 
     # --- PRIVATE METHODS ---
 
@@ -328,6 +361,8 @@ class Category:
 
 cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
 cat1 = Category(cat_url)
+cat1.to_csv("cat1")
+cat1.to_csv("cat1")
 
 
 ##################################################
