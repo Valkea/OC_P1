@@ -72,7 +72,7 @@ class Book():
         collect()
             connect to the given url and collect the product data
         to_csv(path='demo', mode='a')
-            write the content of this instance in the given CSV 
+            write the content of this instance in the given CSV
     """
 
     def __init__(self, url):
@@ -241,6 +241,93 @@ book.to_csv('OneProductAppend')
 ##################################################
 # Category
 ##################################################
+
+
+class Category:
+    """ The purpose of this class is to collect
+        and store the category information
+
+        Attributes
+        ----------
+        category_url : str
+        name : str
+        book_list : list
+        links : list
+        num_books : int
+
+        Methods
+        -------
+        collect()
+            connect to the given url and collect the product data
+    """
+
+    def __init__(self, url=None):
+        self.category_url = url
+        self.name = None
+        self.book_list = []
+        self.links = []
+        self.num_books = 0
+
+        if url is not None:
+            self.collect()
+
+    def collect(self):
+        """ Connect to the category page and grab the information """
+
+        self._soup = connect_with_bs4(self.category_url)
+
+        self.name = self.__scrap_name()
+        self.num_books = self.__scrap_num_books()
+        self.links = self.__scrap_links()
+        self.books = self.__scrap_books()
+
+    # --- PRIVATE METHODS ---
+
+    def __scrap_name(self):
+        try:
+            return self._soup.find('h1').string
+        except Exception:
+            return ''
+
+    def __scrap_num_books(self):
+        try:
+            return int(self._soup.find('form', class_='form-horizontal')
+                                 .find('strong').string)
+        except Exception:
+            return 0
+
+    def __scrap_links(self):
+        def get_links(soup): return soup.select('section a[title]')
+
+        try:
+            links = get_links(self._soup)
+
+            page = 2
+            while(len(links) < self.num_books):
+                base = urljoin(self.category_url, 'page-{}.html'.format(page))
+                soup = connect_with_bs4(base)
+                links.extend(get_links(soup))
+                page += 1
+
+            return [(urljoin(self.category_url, x.attrs['href']),
+                     x.attrs['title']) for x in links]
+        except Exception:
+            return []
+
+    def __scrap_books(self):
+        books = []
+        book = Book(self.links[0][0]).collect()
+
+        for link in self.links:
+            book = Book(link[0])
+            book.collect()
+            books.append(book)
+
+        return books
+
+
+cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
+cat1 = Category(cat_url)
 
 
 ##################################################
