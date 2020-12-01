@@ -6,6 +6,8 @@ The purpose of this module is to test the scrape.py scraping module
 '''
 
 import pytest
+import os.path
+import csv
 
 from bs4 import BeautifulSoup
 
@@ -40,6 +42,9 @@ class TestBook():
         prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
         self.book2 = Book(prod_url)
         self.book2.collect()
+
+        prod_url = 'http://books.toscrape.com/catalogue/soumission_998/index.html'
+        self.book3 = Book(prod_url)
 
     def test_empty_init(self):
         with pytest.raises(Exception):
@@ -120,6 +125,92 @@ class TestBook():
     def test_parse_image_url(self):
         url = "http://books.toscrape.com/media/cache/fe/72/fe72f0532301ec28892ae79a629a293c.jpg"
         assert self.book2.image_url == url
+
+    # --- CSV ---
+
+    def test_to_dict(self):
+        assert isinstance(self.book1.to_dict(), type(dict())) is True
+
+    def test_to_dict_content(self):
+        dbook = self.book2.to_dict()
+        dbook_keys = dbook.keys()
+
+        assert 'product_page_url' in dbook_keys
+        assert 'universal_product_code' in dbook_keys
+        assert 'title' in dbook_keys
+        assert 'price_including_tax' in dbook_keys
+        assert 'price_excluding_tax' in dbook_keys
+        assert 'number_available' in dbook_keys
+        assert 'product_description' in dbook_keys
+        assert 'category' in dbook_keys
+        assert 'review_rating' in dbook_keys
+        assert 'image_url' in dbook_keys
+        assert 'image_local' in dbook_keys
+        assert len(dbook_keys) == 11
+
+    def test_get_headers(self):
+        headers = self.book2.get_headers()
+
+        assert 'product_page_url' in headers
+        assert 'universal_product_code' in headers
+        assert 'title' in headers
+        assert 'price_including_tax' in headers
+        assert 'price_excluding_tax' in headers
+        assert 'number_available' in headers
+        assert 'product_description' in headers
+        assert 'category' in headers
+        assert 'review_rating' in headers
+        assert 'image_url' in headers
+        assert 'image_local' in headers
+        assert len(headers) == 11
+
+        print(len(headers), headers)
+
+    def test_to_csv_CREATE_not_collected(self):
+        file = 'test'
+        self.book3.to_csv(file, 'w')
+        assert os.path.exists(f'{file}.csv') is True
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 2
+
+        os.remove(f'{file}.csv')
+
+    def test_to_csv_CREATE_collected(self):
+        file = 'test'
+        self.book2.to_csv(file, 'w')
+        assert os.path.exists(f'{file}.csv') is True
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 2
+
+        os.remove(f'{file}.csv')
+
+    def test_to_csv_APPEND(self):
+        file = 'test'
+        self.book2.to_csv(file, 'w')
+        self.book3.to_csv(file)
+        self.book3.to_csv(file)
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 4
+
+        os.remove(f'{file}.csv')
+
+    def test_to_csv_CREATE_new_file(self):
+        file = 'test'
+        self.book2.to_csv(file)
+        self.book3.to_csv(file)
+        self.book3.to_csv(file, 'w')
+
+        with open(f'{file}.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            assert sum(1 for _ in reader) == 2
+
+        os.remove(f'{file}.csv')
 
 
 ##################################################
