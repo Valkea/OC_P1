@@ -13,38 +13,40 @@ from urllib.parse import urljoin
 
 from utils import connect_with_bs4
 
+
 ##################################################
 # Book
 ##################################################
+
 
 class Book():
     """ The purpose of this class is to collect
         and store the product information
 
-        Attributes
-        ----------
-        product_page_url : str
-        universal_product_code : str
-        title : str
-        price_including_tax : str
-        price_excluding_tax : str
-        number_available : str
-        product_description : str
-        category : str
-        review_rating : int
-        image_url : str
-        image_local : str
+    Attributes
+    ----------
+    product_page_url : str
+    universal_product_code : str
+    title : str
+    price_including_tax : str
+    price_excluding_tax : str
+    number_available : str
+    product_description : str
+    category : str
+    review_rating : int
+    image_url : str
+    image_local : str
 
-        Methods
-        -------
-        get_headers()
-            return a list of the attributes names to use in the CSV
-        to_dict()
-            return a dict of the attributes and values to use in the CSV
-        collect()
-            connect to the given url and collect the product data
-        to_csv(path='demo', mode='a')
-            write the content of this instance in the given CSV
+    Methods
+    -------
+    get_headers()
+        return a list of the attributes names to use in the CSV
+    to_dict()
+        return a dict of the attributes and values to use in the CSV
+    collect()
+        connect to the given url and collect the product data
+    to_csv(path='demo', mode='a')
+        write the content of this instance in the given CSV
     """
 
     def __init__(self, url):
@@ -110,7 +112,7 @@ class Book():
         Parameters
         ----------
         path : str (default is 'demo')
-            The path including its name but without the extension to the csv file
+            The path including its name but without the extension to the csv
         mode : str (default is 'a')
             The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
         """

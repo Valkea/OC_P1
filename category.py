@@ -18,24 +18,25 @@ from utils import connect_with_bs4, progress_monitor
 # Category
 ##################################################
 
+
 class Category:
     """ The purpose of this class is to collect
         and store the category information
 
-        Attributes
-        ----------
-        category_url : str
-        name : str
-        book_list : list
-        links : list
-        num_books : int
+    Attributes
+    ----------
+    category_url : str
+    name : str
+    book_list : list
+    links : list
+    num_books : int
 
-        Methods
-        -------
-        collect()
-            connect to the given url and collect the product data
-        to_csv(path='demo', mode='a')
-            write the content of the collected books in the given CSV
+    Methods
+    -------
+    collect()
+        connect to the given url and collect the product data
+    to_csv(path='demo', mode='a')
+        write the content of the collected books in the given CSV
     """
 
     def __init__(self, url=None):
@@ -65,7 +66,7 @@ class Category:
         Parameters
         ----------
         path : str (default is 'demo')
-            The path including its name but without the extension to the csv file
+            The path including its name but without the extension to the csv
         mode : str (default is 'a')
             The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
         """

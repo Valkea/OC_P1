@@ -19,17 +19,17 @@ class Scraper():
     """ The purpose of this class is to collect
         and store the whole books of the website
 
-        Attributes
-        ----------
-        site_url : str
-        categories : list
-        links : list
-        num_books : int
+    Attributes
+    ----------
+    site_url : str
+    categories : list
+    links : list
+    num_books : int
 
-        Methods
-        -------
-        collect()
-            connect to the given url and collect the data
+    Methods
+    -------
+    collect()
+        connect to the given url and collect the data
     """
 
     def __init__(self, url):
