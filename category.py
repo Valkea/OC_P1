@@ -10,7 +10,8 @@ import csv
 import os.path
 from urllib.parse import urljoin
 
-from book import Book, connect_with_bs4
+from book import Book
+from utils import connect_with_bs4, progress_monitor
 
 
 ##################################################
@@ -126,8 +127,19 @@ class Category:
         book = Book(self.links[0][0]).collect()
 
         for link in self.links:
+
+            progress_monitor.catbooks_update(
+                    len(books),
+                    self.num_books,
+                    link[1])
+
             book = Book(link[0])
             book.collect()
             books.append(book)
+
+        progress_monitor.catbooks_update(
+                    len(books),
+                    self.num_books,
+                    link[1])
 
         return books

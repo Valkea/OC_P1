@@ -9,37 +9,9 @@
 import re
 import csv
 import os.path
-from urllib.request import urlopen
 from urllib.parse import urljoin
 
-from bs4 import BeautifulSoup
-
-
-##################################################
-# Generic
-##################################################
-
-def connect_with_bs4(url):
-    """ Connect to the given URL, collect the html data
-        and return a BeautifulSoup object to work with
-
-    Parameters
-    ----------
-    url : str
-        The internet address to use in order to collect the data
-
-    Returns
-    -------
-    BeautifulSoup
-        An object containing parsed html data
-    """
-
-    page = urlopen(url)
-    html = page.read().decode('utf8')
-    soup = BeautifulSoup(html, 'html.parser')
-
-    return soup
-
+from utils import connect_with_bs4
 
 ##################################################
 # Book

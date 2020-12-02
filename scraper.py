@@ -4,11 +4,11 @@
 ''' The purpose of this module is to scrape the content of
     the http://books.toscrape.com/ website.
 '''
-from os import get_terminal_size
 from urllib.request import urljoin
 
-from book import Book, connect_with_bs4
+from book import Book
 from category import Category
+from utils import connect_with_bs4, progress_monitor
 
 ##################################################
 # Scraper
@@ -69,18 +69,25 @@ class Scraper():
     def __scrap_categories(self):
         categories = []
 
+        progress_monitor.allbooks_init(self.num_books, self.site_url)
+
         for link in self.links:
-            Book.progress_bar(len(categories), self.num_books, link[1])
+
+            progress_monitor.category_update(
+                    len(categories),
+                    len(self.links),
+                    link[1])
+
             category = Category(link[0])
             categories.append(category)
 
         return categories
 
 
-
 ##################################################
 # Main
 ##################################################
+
 
 if __name__ == '__main__':
 
