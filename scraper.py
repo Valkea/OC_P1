@@ -4,13 +4,78 @@
 ''' The purpose of this module is to scrape the content of
     the http://books.toscrape.com/ website.
 '''
+from os import get_terminal_size
+from urllib.request import urljoin
 
-from book import Book
+from book import Book, connect_with_bs4
 from category import Category
 
 ##################################################
-# Site
+# Scraper
 ##################################################
+
+
+class Scraper():
+    """ The purpose of this class is to collect
+        and store the whole books of the website
+
+        Attributes
+        ----------
+        site_url : str
+        categories : list
+        links : list
+        num_books : int
+
+        Methods
+        -------
+        collect()
+            connect to the given url and collect the data
+    """
+
+    def __init__(self, url):
+        self.site_url = url
+        self.links = []
+        self.categories = []
+        self.num_books = 0
+
+        if(url is not None):
+            self.collect()
+
+    def collect(self):
+        """ Connect to the home-page and grab the information """
+
+        self._soup = connect_with_bs4(self.site_url)
+
+        self.num_books = self.__scrap_num_books()
+        self.links = self.__scrap_links()
+        self.categories = self.__scrap_categories()
+
+    # --- PRIVATE METHODS ---
+
+    def __scrap_num_books(self):
+        try:
+            return int(self._soup.select('form strong')[0].string)
+        except Exception:
+            return 0
+
+    def __scrap_links(self):
+        try:
+            ahrefs = self._soup.select('div[class=side_categories] li ul a')
+            base_url = urljoin(self.site_url, '.')
+            return [(urljoin(base_url, x.attrs['href']), x.string.strip()) for x in ahrefs]
+        except Exception:
+            return []
+
+    def __scrap_categories(self):
+        categories = []
+
+        for link in self.links:
+            Book.progress_bar(len(categories), self.num_books, link[1])
+            category = Category(link[0])
+            categories.append(category)
+
+        return categories
+
 
 
 ##################################################
@@ -19,6 +84,7 @@ from category import Category
 
 if __name__ == '__main__':
 
+    # play with Book class
     prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
     book = Book(prod_url)
     book.to_csv('OneProductAppend')
@@ -26,7 +92,12 @@ if __name__ == '__main__':
     book.to_csv('OneProductAlone')
     book.to_csv('OneProductAppend')
 
+    # play with Category class
     cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
     cat1 = Category(cat_url)
     cat1.to_csv("cat1")
     cat1.to_csv("cat1")
+
+    # play with Scraper class
+    site_url = 'http://books.toscrape.com'
+    site = Scraper(site_url)
