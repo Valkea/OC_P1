@@ -7,7 +7,6 @@
 '''
 
 import re
-import csv
 import os.path
 from urllib.parse import urljoin
 
@@ -104,37 +103,6 @@ class Book():
         self.category = self.__scrap_category()
         self.review_rating = self.__scrap_review_rating()
         self.image_url = self.__scrap_image_url()
-
-    def to_csv(self, path='demo', mode='a'):
-        """ OBSOLETE -> FileIO
-            Write the qualified attributes of the Book object to a given CSV file
-            Append if the file already exists
-
-        Parameters
-        ----------
-        path : str (default is 'demo')
-            The path including its name but without the extension to the csv
-        mode : str (default is 'a')
-            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
-        """
-
-        if self.title is None:
-            self.collect()
-
-        addHeaders = False
-        if not os.path.exists(f'{path}.csv') or (mode != 'a' and mode != 'a+'):
-            addHeaders = True
-
-        with open(f"{path}.csv", mode, newline='') as csvfile:
-
-            fields = self.get_headers()
-            writer = csv.DictWriter(csvfile, fieldnames=fields)
-
-            if addHeaders:
-                headers = {fields[i]: fields[i] for i in range(len(fields))}
-                writer.writerow(headers)
-
-            writer.writerow(self.to_dict())
 
     def save_image(self):
         """ Copy the remote image in the current local directory """

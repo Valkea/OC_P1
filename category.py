@@ -6,7 +6,6 @@
     http://books.toscrape.com/ website.
 '''
 
-import csv
 import os.path
 from urllib.parse import urljoin
 
@@ -58,38 +57,6 @@ class Category:
         self.num_books = self.__scrap_num_books()
         self.links = self.__scrap_links()
         self.books = self.__scrap_books()
-
-    def to_csv(self, path='demo', mode='a'):
-        """ OBSOLETE -> FileIO
-            Write the collected books information to a given CSV file
-            Append if the file already exists
-
-        Parameters
-        ----------
-        path : str (default is 'demo')
-            The path including its name but without the extension to the csv
-        mode : str (default is 'a')
-            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
-        """
-
-        if self.books == []:
-            self.collect()
-
-        addHeaders = False
-        if not os.path.exists(f'{path}.csv') or (mode != 'a' and mode != 'a+'):
-            addHeaders = True
-
-        with open(f"{path}.csv", mode, newline='') as csvfile:
-
-            fields = self.books[0].get_headers()
-            writer = csv.DictWriter(csvfile, fieldnames=fields)
-
-            if addHeaders:
-                headers = {fields[i]: fields[i] for i in range(len(fields))}
-                writer.writerow(headers)
-
-            for book in self.books:
-                writer.writerow(book.to_dict())
 
     def write_csv(self, path=None, mode='a'):
         """ Write the collected books information to a given CSV file

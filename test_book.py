@@ -167,7 +167,7 @@ class TestBook():
 
     def test_to_csv_CREATE_not_collected(self):
         file = 'test'
-        self.book3.to_csv(file, 'w')
+        self.book3.write_csv(file, 'w')
         assert os.path.exists(f'{file}.csv') is True
 
         with open(f'{file}.csv', newline='') as csvfile:
@@ -178,7 +178,7 @@ class TestBook():
 
     def test_to_csv_CREATE_collected(self):
         file = 'test'
-        self.book2.to_csv(file, 'w')
+        self.book2.write_csv(file, 'w')
         assert os.path.exists(f'{file}.csv') is True
 
         with open(f'{file}.csv', newline='') as csvfile:
@@ -189,9 +189,9 @@ class TestBook():
 
     def test_to_csv_APPEND(self):
         file = 'test'
-        self.book2.to_csv(file, 'w')
-        self.book3.to_csv(file)
-        self.book3.to_csv(file)
+        self.book3.write_csv(file, 'w')
+        self.book3.write_csv(file)
+        self.book3.write_csv(file)
 
         with open(f'{file}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -201,9 +201,9 @@ class TestBook():
 
     def test_to_csv_CREATE_new_file(self):
         file = 'test'
-        self.book2.to_csv(file)
-        self.book3.to_csv(file)
-        self.book3.to_csv(file, 'w')
+        self.book3.write_csv(file)
+        self.book3.write_csv(file)
+        self.book3.write_csv(file, 'w')
 
         with open(f'{file}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')

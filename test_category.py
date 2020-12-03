@@ -10,10 +10,10 @@ import csv
 
 from scraper import Book, Category
 
-
 ##################################################
 # Category
 ##################################################
+
 
 class TestCategory:
 
@@ -87,7 +87,7 @@ class TestCategory:
 
     def test_to_csv(self):
         file = 'test-category'
-        self.cat2.to_csv(file)
+        self.cat2.write_csv(file)
 
         with open(f'{file}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -97,8 +97,8 @@ class TestCategory:
 
     def test_to_csv_APPEND(self):
         file = 'test-category'
-        self.cat2.to_csv(file)
-        self.cat2.to_csv(file)
+        self.cat2.write_csv(file)
+        self.cat2.write_csv(file)
 
         with open(f'{file}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -108,9 +108,9 @@ class TestCategory:
 
     def test_to_csv_CREATE_new_file(self):
         file = 'test-category'
-        self.cat2.to_csv(file)
-        self.cat2.to_csv(file)
-        self.cat2.to_csv(file, 'w')
+        self.cat2.write_csv(file)
+        self.cat2.write_csv(file)
+        self.cat2.write_csv(file, 'w')
 
         with open(f'{file}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
