@@ -1,6 +1,6 @@
 # BookScraper
 
-BookScraper is a Python script created for scraping the content of the http://books.toscrape.com
+BookScraper is a Python 3 script created for scraping the content of the http://books.toscrape.com
 
 ## Installation
 
@@ -59,17 +59,21 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 You can test the modules of the script with pytest.
 
 ```bash
->>> pytest -s 
+>>> python3 -m pytest -s 
 ```
 Be careful, the whole test is pretty long !
 So instead, you can test one class at a time with the following commands.
 
 ```bash
->>> pytest -sk TestBook
->>> pytest -sk TestCategory
->>> pytest -sk TestScraper
->>> pytest -sk TestFileIO
+>>> python3 -m pytest -sk TestBook
+>>> python3 -m pytest -sk TestCategory
+>>> python3 -m pytest -sk TestScraper
+>>> python3 -m pytest -sk TestFileIO
 ```
+
+**Warning**
+Don't run `pytest` directly, use `python3 -m pytest`.
+Otherwise the test modules won't find the scrapper files.
 
 ## Ouputs
 

@@ -107,66 +107,74 @@ class Progress():
 
     def complete(self):
 
-        terminal_size = get_terminal_size()
-        size = terminal_size.columns-1
+        try:
+            terminal_size = get_terminal_size()
+            size = terminal_size.columns-1
 
-        print("\033[B"*6)
+            print("\033[B"*6)
 
-        print("\n"+" Scraping process complete ".center(size, '*'[:size]))
+            print("\n"+" Scraping process complete ".center(size, '*'[:size]))
 
-        if self.error_count > 0:
-            print(f"\n Error count: {self.error_count}\n")
-            chdir(CURRENT_WORKING_DIRECTORY)
-            with open('errors.log', 'r') as f:
-                for i, row in enumerate(f):
-                    if i % 2 == 0:
-                        print(' --'+row, end='\r')
-                    else:
-                        print(' '+row, end='\n')
+            if self.error_count > 0:
+                print(f"\n Error count: {self.error_count}\n")
+                chdir(CURRENT_WORKING_DIRECTORY)
+                with open('errors.log', 'r') as f:
+                    for i, row in enumerate(f):
+                        if i % 2 == 0:
+                            print(' --'+row, end='\r')
+                        else:
+                            print(' '+row, end='\n')
 
-                    if i > 10:
-                        print("\n" + " Open errors.log for "
-                                     "a complete report ".center(size, '*'[:size]))
-                        break
-        else:
-            print("\n No scraping error\n")
+                        if i > 10:
+                            print("\n" + " Open errors.log for "
+                                         "a complete report ".center(size, '*'[:size]))
+                            break
+            else:
+                print("\n No scraping error\n")
+
+        except OSError:
+            pass
 
     # --- PRIVATE METHODS ---
 
     def __update_display(self):
 
-        terminal_size = get_terminal_size()
-        bar_size = terminal_size.columns - 20
-        num_lines = 5
+        try:
+            terminal_size = get_terminal_size()
+            bar_size = terminal_size.columns - 20
+            num_lines = 5
 
-        # Clean terminal
-        print(" "*terminal_size.columns*num_lines)
-        print("\033[A"*(num_lines+1))
+            # Clean terminal
+            print(" "*terminal_size.columns*num_lines)
+            print("\033[A"*(num_lines+1))
 
-        # Display
-        allbooks = self._allbooks
-        all_bar = self.__get_progressbar(allbooks, bar_size)
-        if self.error_count == 0:
-            title = f"{allbooks['label']}"
-        else:
-            title = f"{allbooks['label']} [There are {self.error_count} error(s) : check errors.log]"
-        print(f"{title.center(bar_size)[:bar_size]}")
-        print(f"{all_bar} {allbooks['current']}/{allbooks['total']} books")
+            # Display
+            allbooks = self._allbooks
+            all_bar = self.__get_progressbar(allbooks, bar_size)
+            if self.error_count == 0:
+                title = f"{allbooks['label']}"
+            else:
+                title = f"{allbooks['label']} [There are {self.error_count} error(s) : check errors.log]"
+            print(f"{title.center(bar_size)[:bar_size]}")
+            print(f"{all_bar} {allbooks['current']}/{allbooks['total']} books")
 
-        cat = self._categories
-        # cat_bar = self.__get_progressbar(cat, bar_size)
-        # print(f"{cat_bar} {cat['current']}/{cat['total']} categories")
-        catlabel = f"Current category: {cat['label']}  "\
-                   f"[{cat['current']+1}/{cat['total']}]"
-        print(f"{catlabel.center(bar_size)[:bar_size]}")
+            cat = self._categories
+            # cat_bar = self.__get_progressbar(cat, bar_size)
+            # print(f"{cat_bar} {cat['current']}/{cat['total']} categories")
+            catlabel = f"Current category: {cat['label']}  "\
+                       f"[{cat['current']+1}/{cat['total']}]"
+            print(f"{catlabel.center(bar_size)[:bar_size]}")
 
-        catbooks = self._catbooks
-        catb_bar = self.__get_progressbar(catbooks, bar_size)
-        print(f"{catb_bar} {catbooks['current']}/{catbooks['total']} books")
-        print(f"{catbooks['label'].center(bar_size)[:bar_size]}", end='\r')
+            catbooks = self._catbooks
+            catb_bar = self.__get_progressbar(catbooks, bar_size)
+            print(f"{catb_bar} {catbooks['current']}/{catbooks['total']} books")
+            print(f"{catbooks['label'].center(bar_size)[:bar_size]}", end='\r')
 
-        # Reset cursor position in terminal
-        print("\033[A"*num_lines)
+            # Reset cursor position in terminal
+            print("\033[A"*num_lines)
+
+        except OSError:
+            pass
 
     def __get_progressbar(self, source, bar_size):
 
