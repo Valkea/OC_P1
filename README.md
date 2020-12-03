@@ -49,17 +49,32 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 'You can check the generated files in demo/slide3'
 ```
 
-## Ouputs
+##c Ouputs
 
-*Errors:*
+### *Errors:*
 you can find any scraping errors in the errors.log file along with the page URL.
 
-*Data:*
+### *Data:*
 you can find the scraped information and images in the 'data' folder. Each category is provided with its own 'category_folder' in which you will be able to find the downloaded images and the generated csv file.
 
-*Demo data:*
+### *Demo data:*
 when running the script in slide mode, the generated data are stored into a 'demo' folder.
 
+## Tests
+You can test the modules of the script with pytest
+
+```bash
+>>> pytest -s 
+```
+Be careful, the whole test is pretty long !
+So instead, you can test one class at a time with the following commands
+
+```bash
+>>> pytest -sk TestBook
+>>> pytest -sk TestCategory
+>>> pytest -sk TestScraper
+>>> pytest -sk TestFileIO
+```
 
 ## License
 Quelle Licence choisir pour ce projet qui ne doit probablement pas être vu par d'autres étudiants ?

@@ -11,7 +11,8 @@ import csv
 
 from bs4 import BeautifulSoup
 
-from book import Book, connect_with_bs4
+from book import Book
+from utils import FileIO
 
 
 ##################################################
@@ -20,13 +21,13 @@ from book import Book, connect_with_bs4
 
 def test_connect_with_bs4_TYPE():
     url = 'http://books.toscrape.com'
-    assert type(connect_with_bs4(url)) == BeautifulSoup
+    assert type(FileIO.connect_with_bs4(url)) == BeautifulSoup
 
 
 def test_connect_with_bs4_ERROR():
 
     with pytest.raises(Exception):
-        connect_with_bs4('http://www.xxxfakexxx.xxx')
+        FileIO.connect_with_bs4('http://www.xxxfakexxx.xxx')
 
 
 ##################################################
