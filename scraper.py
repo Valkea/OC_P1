@@ -6,6 +6,8 @@
 '''
 
 from urllib.request import urljoin
+import argparse
+from os import chdir, mkdir
 
 from book import Book
 from category import Category
@@ -70,7 +72,7 @@ class Scraper():
 
     def __scrap_categories(self, to_csv=False):
 
-        FileIO.init_root('data')
+        FileIO.init_root('data', False)
         categories = []
 
         progress_monitor.allbooks_init(self.num_books, self.site_url)
@@ -96,24 +98,56 @@ class Scraper():
 # Main
 ##################################################
 
+def move_to_path(path):
+    path_list = path.split('/')
+    for dirname in path_list:
+        try:
+            mkdir(dirname)
+        except Exception:
+            pass
+        chdir(dirname)
+
 
 if __name__ == '__main__':
 
-    # # play with Book class
-    # prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
-    # book = Book(prod_url)
-    # book.write_csv('OnProductAppend')
-    # book.collect()
-    # book.write_csv('OnProductAlone', 'w')
-    # book.write_csv('OnProductAlone', 'w')
-    # book.write_csv('OnProductAppend')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--slide', type=int, help="Hello world")
 
-    # # play with Category class
-    # cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
-    # cat1 = Category(cat_url)
-    # cat1.write_csv('cat1')
-    # cat1.write_csv('cat1')
+    args = parser.parse_args()
+    print('::', args.slide)
 
-    # play with Scraper class
-    site_url = 'http://books.toscrape.com'
-    site = Scraper(site_url)
+    if(args.slide == 1):
+        # play with Book class
+
+        move_to_path('demo/slide1')
+
+        prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
+        book = Book(prod_url)
+        book.write_csv('OnProductAppend')
+        book.collect()
+        book.write_csv('OnProductAlone', 'w')
+        book.write_csv('OnProductAlone', 'w')
+        book.write_csv('OnProductAppend')
+
+    elif(args.slide == 2):
+        # play with Category class
+
+        move_to_path('demo/slide2')
+
+        cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
+        cat1 = Category(cat_url)
+        cat1.write_csv('cat1')
+        cat1.write_csv('cat1')
+
+    elif(args.slide == 3):
+        # play with Scraper class
+
+        move_to_path('demo/slide3')
+
+        site_url = 'http://books.toscrape.com'
+        site = Scraper(site_url)
+
+    else:
+        # Scrap the website
+        site_url = 'http://books.toscrape.com'
+        site = Scraper(site_url)
