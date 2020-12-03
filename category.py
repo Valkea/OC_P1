@@ -10,7 +10,7 @@ import os.path
 from urllib.parse import urljoin
 
 from book import Book
-from utils import connect_with_bs4, progress_monitor, FileIO
+from utils import progress_monitor, FileIO
 
 
 ##################################################
@@ -58,7 +58,7 @@ class Category:
     def collect(self):
         """ Connect to the category page and grab the information """
 
-        self._soup = connect_with_bs4(self.category_url)
+        self._soup = FileIO.connect_with_bs4(self.category_url)
 
         self.name = self.__scrap_name()
         self.num_books = self.__scrap_num_books()
@@ -116,7 +116,7 @@ class Category:
             page = 2
             while(len(links) < self.num_books):
                 base = urljoin(self.category_url, 'page-{}.html'.format(page))
-                soup = connect_with_bs4(base)
+                soup = FileIO.connect_with_bs4(base)
                 links.extend(get_links(soup))
                 page += 1
 

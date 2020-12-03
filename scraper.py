@@ -11,7 +11,7 @@ from os import chdir, mkdir
 
 from book import Book
 from category import Category
-from utils import connect_with_bs4, progress_monitor, FileIO
+from utils import progress_monitor, FileIO
 
 ##################################################
 # Scraper
@@ -47,7 +47,7 @@ class Scraper():
     def collect(self):
         """ Connect to the home-page and grab the information """
 
-        self._soup = connect_with_bs4(self.site_url)
+        self._soup = FileIO.connect_with_bs4(self.site_url)
 
         self.num_books = self.__scrap_num_books()
         self.links = self.__scrap_links()
@@ -114,10 +114,10 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--slide', type=int, help="Hello world")
 
     args = parser.parse_args()
-    print('::', args.slide)
 
     if(args.slide == 1):
         # play with Book class
+        print("This part shows the product page scraping")
 
         move_to_path('demo/slide1')
 
@@ -131,6 +131,7 @@ if __name__ == '__main__':
 
     elif(args.slide == 2):
         # play with Category class
+        print("This part shows the category page scraping")
 
         move_to_path('demo/slide2')
 
@@ -141,6 +142,7 @@ if __name__ == '__main__':
 
     elif(args.slide == 3):
         # play with Scraper class
+        print("This part shows the whole website scraping")
 
         move_to_path('demo/slide3')
 

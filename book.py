@@ -10,7 +10,7 @@ import re
 import os.path
 from urllib.parse import urljoin
 
-from utils import connect_with_bs4, FileIO
+from utils import FileIO
 
 
 ##################################################
@@ -92,7 +92,7 @@ class Book():
     def collect(self):
         """ Connect to the product page and grab the information """
 
-        self._soup = connect_with_bs4(self.product_page_url)
+        self._soup = FileIO.connect_with_bs4(self.product_page_url)
 
         self.universal_product_code = self.__scrap_upc()
         self.title = self.__scrap_title()

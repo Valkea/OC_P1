@@ -12,31 +12,6 @@ import csv
 
 from bs4 import BeautifulSoup
 
-##################################################
-# Connexion
-##################################################
-
-
-def connect_with_bs4(url):
-    """ Connect to the given URL, collect the html data
-        and return a BeautifulSoup object to work with
-
-    Parameters
-    ----------
-    url : str
-        The internet address to use in order to collect the data
-
-    Returns
-    -------
-    BeautifulSoup
-        An object containing parsed html data
-    """
-
-    page = urlopen(url)
-    html = page.read().decode('utf8')
-    soup = BeautifulSoup(html, 'html.parser')
-
-    return soup
 
 ##################################################
 # Progress
@@ -162,7 +137,9 @@ class FileIO:
 
     Static Methods
     -------
-    init_root(root)
+    connect_with_bs4()
+        return a BeautifulSoup object from the given url
+    init_root(root, reset_cwd=True, delete_prev=True)
         remove and re-create (if needed) the <root> folder and enter in it
         use it only once !
     open_category(name)
@@ -172,6 +149,28 @@ class FileIO:
     write(path, fields, data, mode)
         write the given data the the given path.csv
     """
+
+    @staticmethod
+    def connect_with_bs4(url):
+        """ Connect to the given URL, collect the html data
+            and return a BeautifulSoup object to work with
+
+        Parameters
+        ----------
+        url : str
+            The internet address to use in order to collect the data
+
+        Returns
+        -------
+        BeautifulSoup
+            An object containing parsed html data
+        """
+
+        page = urlopen(url)
+        html = page.read().decode('utf8')
+        soup = BeautifulSoup(html, 'html.parser')
+
+        return soup
 
     @staticmethod
     def init_root(dirname, reset_cwd=True, delete_prev=True):
