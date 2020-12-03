@@ -6,14 +6,16 @@ BookScraper is a Python script created for scraping the content of the http://bo
 
 In order to use this script, you need to follow the steps below:
 
-First, let's duplicate the project github repository
+### First, 
+let's duplicate the project github repository
 
 ```bash
 >>> git clone https://github.com/Valkea/OC_P1.git
 >>> cd OC_P1
 ```
 
-Secondly, let's create a virtual environment and install the required Python librairies
+### Secondly,
+let's create a virtual environment and install the required Python libraries
 
 ```bash
 >>> python3 -m venv venv
@@ -21,16 +23,20 @@ Secondly, let's create a virtual environment and install the required Python lib
 >>> pip install -r requirements.txt
 ```
 
-Finally, we can start scraping the website by using the following command
+### Finally,
+we can start scraping the website by using the following command
 
 ```bash
 >>> python3 scraper.py
 ```
-The following progress bar will apprears in the Terminal so you can know the progress
+The following progress bar will appears in the Terminal so you can know the progress.
 ![alt text](medias/progress1.png)
 
-If for any reason the script encounter some FileIO errors, it will indicate it next website address
+If for any reason the script encounter some FileIO errors, it will be indicated next to the website address.
 ![alt text](medias/progress2.png)
+
+Once completed, you will get a mini report and the top 5 errors messages from the errors.log (if any).
+![alt text](medias/progress3.png)
 
 You can also use the '-s' or '--slide' parameter to test some specific parts of the project.
 
@@ -49,25 +55,14 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 'You can check the generated files in demo/slide3'
 ```
 
-## Ouputs
-
-### *Errors:*
-you can find any scraping errors in the errors.log file along with the page URL.
-
-### *Data:*
-you can find the scraped information and images in the 'data' folder. Each category is provided with its own 'category_folder' in which you will be able to find the downloaded images and the generated csv file.
-
-### *Demo data:*
-when running the script in slide mode, the generated data are stored into a 'demo' folder.
-
 ## Tests
-You can test the modules of the script with pytest
+You can test the modules of the script with pytest.
 
 ```bash
 >>> pytest -s 
 ```
 Be careful, the whole test is pretty long !
-So instead, you can test one class at a time with the following commands
+So instead, you can test one class at a time with the following commands.
 
 ```bash
 >>> pytest -sk TestBook
@@ -76,6 +71,17 @@ So instead, you can test one class at a time with the following commands
 >>> pytest -sk TestFileIO
 ```
 
+## Ouputs
+
+### Errors
+you can find any scraping errors in the errors.log file along with the page URL.
+
+### Data
+you can find the scraped information and images in the 'data' folder. Each category is provided with its own 'category_folder' in which you will be able to find the downloaded images and the generated csv file.
+
+### Demo data
+when running the script in slide mode, the generated data are stored into a 'demo' folder.
+
+
 ## License
-Quelle Licence choisir pour ce projet qui ne doit probablement pas être vu par d'autres étudiants ?
 [MIT](https://choosealicense.com/licenses/mit/)
