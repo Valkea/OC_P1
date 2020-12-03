@@ -105,6 +105,32 @@ class Progress():
 
         self.__update_display()
 
+    def complete(self):
+
+        terminal_size = get_terminal_size()
+        size = terminal_size.columns-1
+
+        print("\033[B"*6)
+
+        print("\n"+" Scraping process complete ".center(size, '*'[:size]))
+
+        if self.error_count > 0:
+            print(f"\n Error count: {self.error_count}\n")
+            chdir(CURRENT_WORKING_DIRECTORY)
+            with open('errors.log', 'r') as f:
+                for i, row in enumerate(f):
+                    if i % 2 == 0:
+                        print(' --'+row, end='\r')
+                    else:
+                        print(' '+row, end='\n')
+
+                    if i > 10:
+                        print("\n" + " Open errors.log for "
+                                     "a complete report ".center(size, '*'[:size]))
+                        break
+        else:
+            print("\n No scraping error\n")
+
     # --- PRIVATE METHODS ---
 
     def __update_display(self):
@@ -123,7 +149,7 @@ class Progress():
         if self.error_count == 0:
             title = f"{allbooks['label']}"
         else:
-            title = f"{allbooks['label']} [There is {self.error_count} error(s) : check errors.log]"
+            title = f"{allbooks['label']} [There are {self.error_count} error(s) : check errors.log]"
         print(f"{title.center(bar_size)[:bar_size]}")
         print(f"{all_bar} {allbooks['current']}/{allbooks['total']} books")
 

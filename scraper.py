@@ -133,6 +133,7 @@ if __name__ == '__main__':
         book.write_csv('OnProductAlone', 'w')
         book.write_csv('OnProductAlone', 'w')
         book.write_csv('OnProductAppend')
+        progress_monitor.complete()
 
     elif(args.slide == 2):
         # play with Category class
@@ -145,6 +146,7 @@ if __name__ == '__main__':
         cat1 = Category(cat_url)
         cat1.write_csv('cat1')
         cat1.write_csv('cat1')
+        progress_monitor.complete()
 
     elif(args.slide == 3):
         # play with Scraper class
@@ -155,8 +157,10 @@ if __name__ == '__main__':
 
         site_url = 'http://books.toscrape.com'
         site = Scraper(site_url)
+        progress_monitor.complete()
 
     else:
         # Scrap the website
         site_url = 'http://books.toscrape.com'
         site = Scraper(site_url)
+        progress_monitor.complete()
