@@ -26,6 +26,11 @@ Finally, we can start scraping the website by using the following command
 ```bash
 >>> python3 scraper.py
 ```
+The following progress bar will apprears in the Terminal so you can know the progress
+![alt text](medias/progress1.png)
+
+If for any reason the script encounter some FileIO errors, it will indicate it next website address
+![alt text](medias/progress2.png)
 
 You can also use the '-s' or '--slide' parameter to test some specific parts of the project.
 
@@ -46,11 +51,14 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 
 ## Ouputs
 
-*Errors:* you can find any scraping errors in the errors.log file along with the page URL.
+*Errors:*
+you can find any scraping errors in the errors.log file along with the page URL.
 
-*Data:* you can find the scraped information and images in the 'data' folder. Each category is provided with its own 'category_folder' in which you will be able to find the downloaded images and the generated csv file.
+*Data:*
+you can find the scraped information and images in the 'data' folder. Each category is provided with its own 'category_folder' in which you will be able to find the downloaded images and the generated csv file.
 
-*Demo data:* when running the script in slide mode, the generated data are stored into a 'demo' folder.
+*Demo data:*
+when running the script in slide mode, the generated data are stored into a 'demo' folder.
 
 
 ## License
