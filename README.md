@@ -49,7 +49,7 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 'You can check the generated files in demo/slide3'
 ```
 
-##c Ouputs
+## Ouputs
 
 ### *Errors:*
 you can find any scraping errors in the errors.log file along with the page URL.
