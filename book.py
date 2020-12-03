@@ -10,7 +10,7 @@ import re
 import os.path
 from urllib.parse import urljoin
 
-from utils import FileIO
+from utils import FileIO, log_error
 
 
 ##################################################
@@ -136,32 +136,40 @@ class Book():
 
     # --- PRIVATE METHODS ---
 
+    @log_error
     def __scrap_upc(self):
         try:
             return self._soup.find('th', string='UPC').find_next('td').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the UPC ::\n{self.product_page_url}"))
 
+    @log_error
     def __scrap_title(self):
         try:
             return self._soup.find('h1').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Title ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_price_inc_tax(self):
         try:
             return self._soup.find('th', string="Price (incl. tax)") \
                             .find_next('td').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Price including tax ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_price_exc_tax(self):
         try:
             return self._soup.find('th', string="Price (excl. tax)") \
                             .find_next('td').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Price excluding tax ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_number_available(self):
         try:
             number_available_txt = self._soup                               \
@@ -170,22 +178,28 @@ class Book():
 
             return int(re.search(r'[0-9]+', number_available_txt).group())
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Availability ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_product_description(self):
         try:
             return self._soup.select("#product_description")[0]  \
                             .find_next('p').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Description ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_category(self):
         try:
             return self._soup.find('ul', class_='breadcrumb')    \
                             .findAll('a')[2].string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Category ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_review_rating(self):
         try:
             trans = {'One': 1, 'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5}
@@ -193,22 +207,26 @@ class Book():
                     (self._soup.find('p', class_='star-rating')
                         .attrs['class'][1])]
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Rating ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_image_url(self):
         try:
             relative_url = self._soup.img.attrs['src']  # relative
             base_url = urljoin(self.product_page_url, '.')
             return urljoin(base_url, relative_url)  # absolute
-        except Exception as e:
-            return e
+        except Exception:
+            raise(Exception(f"Can't find the Image URL ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __get_image_name(self):
-
         try:
             extpos = self.image_url.rindex('.')
         except Exception:
-            print("Can't find file type")
+            raise(Exception(f"Can't find the File type ::\
+                    \n{self.product_page_url}"))
 
         pic_name = self.title + self.image_url[extpos:]
         pic_name = pic_name.replace(' ', '_').replace(

@@ -5,12 +5,37 @@
     the generic functions
 '''
 
-from os import get_terminal_size, chdir, mkdir, getcwd
+from os import get_terminal_size, chdir, mkdir, getcwd, path
 from shutil import rmtree
 from urllib.request import urlopen, urlretrieve, build_opener, install_opener
 import csv
+import logging
 
 from bs4 import BeautifulSoup
+
+
+##################################################
+# Logging
+##################################################
+
+
+def log_error(function, logfile='errors.log', extended_infos=False):
+
+    logging.basicConfig(
+                            filename=logfile,
+                            filemode='w',
+                            format='%(asctime)s - %(message)s',
+                            level=logging.WARNING,
+                            )
+
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except Exception as e:
+            logging.error(e, exc_info=extended_infos)
+            progress_monitor.errors_update()
+
+    return wrapper
 
 
 ##################################################
@@ -45,6 +70,7 @@ class Progress():
         self._categories = {'current': 0, 'total': 0, 'label': ''}
         self._catbooks = {'current': 0, 'total': 0, 'label': ''}
         self._allbooks = {'current': 0, 'total': 0, 'label': ''}
+        self.error_count = 0
 
     def catbooks_update(self, current, total, label):
         self._catbooks = {
@@ -74,6 +100,11 @@ class Progress():
                             'label': label,
                         }
 
+    def errors_update(self):
+        self.error_count += 1
+
+        self.__update_display()
+
     # --- PRIVATE METHODS ---
 
     def __update_display(self):
@@ -89,7 +120,11 @@ class Progress():
         # Display
         allbooks = self._allbooks
         all_bar = self.__get_progressbar(allbooks, bar_size)
-        print(f"{allbooks['label'].center(bar_size)[:bar_size]}")
+        if self.error_count == 0:
+            title = f"{allbooks['label']}"
+        else:
+            title = f"{allbooks['label']} [There is {self.error_count} error(s) : check errors.log]"
+        print(f"{title.center(bar_size)[:bar_size]}")
         print(f"{all_bar} {allbooks['current']}/{allbooks['total']} books")
 
         cat = self._categories
@@ -173,6 +208,7 @@ class FileIO:
         return soup
 
     @staticmethod
+    @log_error
     def init_root(dirname, reset_cwd=True, delete_prev=True):
         """ remove and re-create (if needed) the <root> folder and enter in it
 
@@ -193,31 +229,22 @@ class FileIO:
         if reset_cwd:
             chdir(CURRENT_WORKING_DIRECTORY)
 
-        if delete_prev:
-            try:
-                rmtree(dirname)
-            except Exception as e:
-                print("FileIO ERROR:", e)
+        if delete_prev and path.exists(dirname):
+            rmtree(dirname)
 
-        try:
+        if not path.exists(dirname):
             mkdir(dirname)
-        except Exception as e:
-            print("FileIO ERROR:", e)
 
         chdir(dirname)
 
     @staticmethod
+    @log_error
     def open_category(name):
         """ create the <name> folder and enter into it """
-        try:
+        if not path.exists(name):
             mkdir(name)
-        except Exception as e:
-            print("FileIO ERROR:", e)
 
-        try:
-            chdir(name)
-        except Exception as e:
-            print("FileIO ERROR:", e)
+        chdir(name)
 
     @staticmethod
     def write(path, fields, data, mode='a'):
@@ -245,9 +272,9 @@ class FileIO:
     def close_category():
         """ move to the parent folder """
         chdir('..')
-        print(getcwd())
 
     @staticmethod
+    @log_error
     def download_image(url, name):
 
         # handling error 403
@@ -261,4 +288,4 @@ class FileIO:
             # copy remote image to local
             return urlretrieve(url, name)
         except Exception as e:
-            print(e, url, name)
+            raise(e)

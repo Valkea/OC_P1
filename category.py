@@ -10,7 +10,7 @@ import os.path
 from urllib.parse import urljoin
 
 from book import Book
-from utils import progress_monitor, FileIO
+from utils import progress_monitor, FileIO, log_error
 
 
 ##################################################
@@ -94,19 +94,24 @@ class Category:
 
     # --- PRIVATE METHODS ---
 
+    @log_error
     def __scrap_name(self):
         try:
             return self._soup.find('h1').string
         except Exception:
-            return ''
+            raise(Exception(f"Can't find the Category name ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_num_books(self):
         try:
             return int(self._soup.find('form', class_='form-horizontal')
                                  .find('strong').string)
         except Exception:
-            return 0
+            raise(Exception(f"Can't find the Book number ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_links(self):
         def get_links(soup): return soup.select('section a[title]')
 
@@ -123,8 +128,10 @@ class Category:
             return [(urljoin(self.category_url, x.attrs['href']),
                      x.attrs['title']) for x in links]
         except Exception:
-            return []
+            raise(Exception(f"Can't find the Book links ::\
+                    \n{self.product_page_url}"))
 
+    @log_error
     def __scrap_books(self):
         books = []
         book = Book(self.links[0][0]).collect()

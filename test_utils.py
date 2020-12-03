@@ -9,7 +9,7 @@ from os import getcwd, chdir, mkdir, rmdir, remove
 from os import path
 from urllib.request import urljoin
 
-from utils import FileIO
+from utils import FileIO, log_error
 
 ##################################################
 # FileIO

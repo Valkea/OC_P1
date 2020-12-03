@@ -11,7 +11,7 @@ from os import chdir, mkdir
 
 from book import Book
 from category import Category
-from utils import progress_monitor, FileIO
+from utils import progress_monitor, FileIO, log_error
 
 ##################################################
 # Scraper
@@ -55,21 +55,24 @@ class Scraper():
 
     # --- PRIVATE METHODS ---
 
+    @log_error
     def __scrap_num_books(self):
         try:
             return int(self._soup.select('form strong')[0].string)
-        except Exception:
-            return 0
+        except Exception as e:
+            raise(e)
 
+    @log_error
     def __scrap_links(self):
         try:
             ahrefs = self._soup.select('div[class=side_categories] li ul a')
             base_url = urljoin(self.site_url, '.')
             return [(urljoin(base_url, x.attrs['href']), x.string.strip())
                     for x in ahrefs]
-        except Exception:
-            return []
+        except Exception as e:
+            raise(e)
 
+    @log_error
     def __scrap_categories(self, to_csv=False):
 
         FileIO.init_root('data', False)
@@ -98,6 +101,7 @@ class Scraper():
 # Main
 ##################################################
 
+@log_error
 def move_to_path(path):
     path_list = path.split('/')
     for dirname in path_list:
@@ -117,7 +121,8 @@ if __name__ == '__main__':
 
     if(args.slide == 1):
         # play with Book class
-        print("This part shows the product page scraping")
+        print("This part runs the product page scraping only.")
+        print("You can check the generated files in demo/slide1")
 
         move_to_path('demo/slide1')
 
@@ -131,7 +136,8 @@ if __name__ == '__main__':
 
     elif(args.slide == 2):
         # play with Category class
-        print("This part shows the category page scraping")
+        print("This runs the category page scraping (and hence the product pages)'")
+        print("You can check the generated files in demo/slide2")
 
         move_to_path('demo/slide2')
 
@@ -142,7 +148,8 @@ if __name__ == '__main__':
 
     elif(args.slide == 3):
         # play with Scraper class
-        print("This part shows the whole website scraping")
+        print("This runs the whole website scraping")
+        print("You can check the generated files in demo/slide3")
 
         move_to_path('demo/slide3')
 
