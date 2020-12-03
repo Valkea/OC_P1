@@ -99,25 +99,25 @@ class Scraper():
 
 if __name__ == '__main__':
 
-    # play with Book class
-    prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
-    book = Book(prod_url)
-    # book.to_csv('OneProductAppend')
-    book.write_csv('OnProductAppend')
-    book.collect()
-    book.write_csv('OnProductAlone', 'w')
-    book.write_csv('OnProductAlone', 'w')
-    book.write_csv('OnProductAppend')
-    # book.to_csv('OneProductAlone')
-    # book.to_csv('OneProductAppend')
+    # # play with Book class
+    # prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
+    # book = Book(prod_url)
+    # # book.to_csv('OneProductAppend')
+    # book.write_csv('OnProductAppend')
+    # book.collect()
+    # book.write_csv('OnProductAlone', 'w')
+    # book.write_csv('OnProductAlone', 'w')
+    # book.write_csv('OnProductAppend')
+    # # book.to_csv('OneProductAlone')
+    # # book.to_csv('OneProductAppend')
 
-    # play with Category class
-    cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
-    cat1 = Category(cat_url)
-    # cat1.to_csv("cat1")
-    # cat1.to_csv("cat1")
-    cat1.write_csv('cat1')
-    cat1.write_csv('cat1')
+    # # play with Category class
+    # cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
+    # cat1 = Category(cat_url)
+    # # cat1.to_csv("cat1")
+    # # cat1.to_csv("cat1")
+    # cat1.write_csv('cat1')
+    # cat1.write_csv('cat1')
 
     # play with Scraper class
     site_url = 'http://books.toscrape.com'

@@ -155,6 +155,8 @@ class Category:
         books = []
         book = Book(self.links[0][0]).collect()
 
+        FileIO.open_category(self.name)
+
         for link in self.links:
 
             progress_monitor.catbooks_update(
@@ -166,9 +168,13 @@ class Category:
             book.collect()
             books.append(book)
 
+            book.save_image()
+
         progress_monitor.catbooks_update(
                     len(books),
                     self.num_books,
                     link[1])
+
+        FileIO.close_category()
 
         return books

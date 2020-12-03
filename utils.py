@@ -7,7 +7,7 @@
 
 from os import get_terminal_size, chdir, mkdir, getcwd
 from shutil import rmtree
-from urllib.request import urlopen
+from urllib.request import urlopen, urlretrieve, build_opener, install_opener
 import csv
 
 from bs4 import BeautifulSoup
@@ -196,6 +196,10 @@ class FileIO:
         """ create the <name> folder and enter into it """
         try:
             mkdir(name)
+        except Exception as e:
+            print("FileIO ERROR:", e)
+
+        try:
             chdir(name)
         except Exception as e:
             print("FileIO ERROR:", e)
@@ -226,3 +230,20 @@ class FileIO:
     def close_category():
         """ move to the parent folder """
         chdir('..')
+        print(getcwd())
+
+    @staticmethod
+    def download_image(url, name):
+
+        # handling error 403
+        opener = build_opener()
+        opener.addheaders = [('User-Agent', 'Mozilla/5.0 \
+                (Windows NT 6.1; WOW64) AppleWebKit/537.36 \
+                (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+        install_opener(opener)
+
+        try:
+            # copy remote image to local
+            return urlretrieve(url, name)
+        except Exception as e:
+            print(e, url, name)

@@ -136,6 +136,11 @@ class Book():
 
             writer.writerow(self.to_dict())
 
+    def save_image(self):
+        """ Copy the remote image in the current local directory """
+        self.image_local = self.__get_image_name()
+        FileIO.download_image(self.image_url, self.image_local)
+
     def write_csv(self, path=None, mode='a'):
         """ Write the collected books information to a given CSV file
             Append if the file already exists
@@ -229,3 +234,16 @@ class Book():
             return urljoin(base_url, relative_url)  # absolute
         except Exception as e:
             return e
+
+    def __get_image_name(self):
+
+        try:
+            extpos = self.image_url.rindex('.')
+        except Exception:
+            print("Can't find file type")
+
+        pic_name = self.title + self.image_url[extpos:]
+        pic_name = pic_name.replace(' ', '_').replace(
+                                    '/', '_').replace('\\', '_')
+
+        return pic_name
