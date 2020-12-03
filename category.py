@@ -11,7 +11,7 @@ import os.path
 from urllib.parse import urljoin
 
 from book import Book
-from utils import connect_with_bs4, progress_monitor
+from utils import connect_with_bs4, progress_monitor, FileIO
 
 
 ##################################################
@@ -60,7 +60,8 @@ class Category:
         self.books = self.__scrap_books()
 
     def to_csv(self, path='demo', mode='a'):
-        """ Write the collected books information to a given CSV file
+        """ OBSOLETE -> FileIO
+            Write the collected books information to a given CSV file
             Append if the file already exists
 
         Parameters
@@ -89,6 +90,33 @@ class Category:
 
             for book in self.books:
                 writer.writerow(book.to_dict())
+
+    def write_csv(self, path=None, mode='a'):
+        """ Write the collected books information to a given CSV file
+            Append if the file already exists
+
+        Parameters
+        ----------
+        path : str (default is the category_name)
+            The path including the file name (without the extension to the csv)
+        mode : str (default is 'a')
+            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
+        """
+
+        if self.books == []:
+            self.collect()
+
+        if path is None:
+            path = self.name.lower().replace(' ', '_')
+
+        fields = self.books[0].get_headers()
+        headers = {fields[i]: fields[i] for i in range(len(fields))}
+
+        if not os.path.exists(f'{path}.csv') or (mode != 'a' and mode != 'a+'):
+            FileIO.write(path, fields, headers, mode)
+
+        for book in self.books:
+            FileIO.write(path, fields, book.to_dict(), 'a')
 
     # --- PRIVATE METHODS ---
 

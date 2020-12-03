@@ -11,7 +11,7 @@ import csv
 import os.path
 from urllib.parse import urljoin
 
-from utils import connect_with_bs4
+from utils import connect_with_bs4, FileIO
 
 
 ##################################################
@@ -106,7 +106,8 @@ class Book():
         self.image_url = self.__scrap_image_url()
 
     def to_csv(self, path='demo', mode='a'):
-        """ Write the qualified attributes of the Book object to a given CSV file
+        """ OBSOLETE -> FileIO
+            Write the qualified attributes of the Book object to a given CSV file
             Append if the file already exists
 
         Parameters
@@ -134,6 +135,31 @@ class Book():
                 writer.writerow(headers)
 
             writer.writerow(self.to_dict())
+
+    def write_csv(self, path=None, mode='a'):
+        """ Write the collected books information to a given CSV file
+            Append if the file already exists
+
+        Parameters
+        ----------
+        path : str (default is the book_name)
+            The path including the file name (without the extension to the csv)
+        mode : str (default is 'a')
+            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
+        """
+
+        if self.title is None:
+            self.collect()
+
+        if path is None:
+            path = self.name.lower().replace(' ', '_')
+
+        fields = self.get_headers()
+        headers = {fields[i]: fields[i] for i in range(len(fields))}
+
+        if not os.path.exists(f'{path}.csv') or (mode != 'a' and mode != 'a+'):
+            FileIO.write(path, fields, headers, mode)
+        FileIO.write(path, fields, self.to_dict(), 'a')
 
     # --- PRIVATE METHODS ---
 

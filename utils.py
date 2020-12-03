@@ -5,8 +5,10 @@
     the generic functions
 '''
 
-from os import get_terminal_size
+from os import get_terminal_size, chdir, mkdir, getcwd
+from shutil import rmtree
 from urllib.request import urlopen
+import csv
 
 from bs4 import BeautifulSoup
 
@@ -109,7 +111,7 @@ class Progress():
         print(" "*terminal_size.columns*num_lines)
         print("\033[A"*(num_lines+1))
 
-        # Display 
+        # Display
         allbooks = self._allbooks
         all_bar = self.__get_progressbar(allbooks, bar_size)
         print(f"{allbooks['label'].center(bar_size)[:bar_size]}")
@@ -145,3 +147,82 @@ class Progress():
 
 
 progress_monitor = Progress()
+
+
+##################################################
+# Files Inpout / Output
+##################################################
+
+CURRENT_WORKING_DIRECTORY = getcwd()
+
+
+class FileIO:
+    """ The purpose of this class is to save the collected
+        data to the local storage
+
+    Static Methods
+    -------
+    init_root(root)
+        remove and re-create (if needed) the <root> folder and enter in it
+        use it only once !
+    open_category(name)
+        create the <name> folder and enter into it
+    close_category()
+        move to the parent folder
+    write(path, fields, data, mode)
+        write the given data the the given path.csv
+    """
+
+    @staticmethod
+    def init_root(root):
+        """ remove and re-create (if needed) the <root> folder and enter in it
+        """
+        chdir(CURRENT_WORKING_DIRECTORY)
+
+        try:
+            rmtree(root)
+        except Exception as e:
+            print("FileIO ERROR:", e)
+
+        try:
+            mkdir(root)
+        except Exception as e:
+            print("FileIO ERROR:", e)
+
+        chdir(root)
+
+    @staticmethod
+    def open_category(name):
+        """ create the <name> folder and enter into it """
+        try:
+            mkdir(name)
+            chdir(name)
+        except Exception as e:
+            print("FileIO ERROR:", e)
+
+    @staticmethod
+    def write(path, fields, data, mode='a'):
+        """ Write the collected books information to a given CSV file
+            Append if the file already exists
+
+        Parameters
+        ----------
+        path : str (default is 'demo')
+            The path including its name but without the extension to the csv
+        fields : dict
+            The columns identifiers
+        data : dict
+            The data to write in each column
+        mode : str (default is 'a')
+            The file mode used to open the file (r,r+,w,w+,a,a+,x,x+)
+        """
+
+        with open(f"{path}.csv", mode, newline='') as csvfile:
+
+            writer = csv.DictWriter(csvfile, fieldnames=fields)
+            writer.writerow(data)
+
+    @staticmethod
+    def close_category():
+        """ move to the parent folder """
+        chdir('..')

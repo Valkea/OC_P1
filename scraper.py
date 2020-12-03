@@ -4,11 +4,12 @@
 ''' The purpose of this module is to scrape the content of
     the http://books.toscrape.com/ website.
 '''
+
 from urllib.request import urljoin
 
 from book import Book
 from category import Category
-from utils import connect_with_bs4, progress_monitor
+from utils import connect_with_bs4, progress_monitor, FileIO
 
 ##################################################
 # Scraper
@@ -62,11 +63,14 @@ class Scraper():
         try:
             ahrefs = self._soup.select('div[class=side_categories] li ul a')
             base_url = urljoin(self.site_url, '.')
-            return [(urljoin(base_url, x.attrs['href']), x.string.strip()) for x in ahrefs]
+            return [(urljoin(base_url, x.attrs['href']), x.string.strip())
+                    for x in ahrefs]
         except Exception:
             return []
 
-    def __scrap_categories(self):
+    def __scrap_categories(self, to_csv=False):
+
+        FileIO.init_root('data')
         categories = []
 
         progress_monitor.allbooks_init(self.num_books, self.site_url)
@@ -81,6 +85,10 @@ class Scraper():
             category = Category(link[0])
             categories.append(category)
 
+            FileIO.open_category(category.name)
+            category.write_csv()
+            FileIO.close_category()
+
         return categories
 
 
@@ -94,16 +102,22 @@ if __name__ == '__main__':
     # play with Book class
     prod_url = 'http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html'
     book = Book(prod_url)
-    book.to_csv('OneProductAppend')
+    # book.to_csv('OneProductAppend')
+    book.write_csv('OnProductAppend')
     book.collect()
-    book.to_csv('OneProductAlone')
-    book.to_csv('OneProductAppend')
+    book.write_csv('OnProductAlone', 'w')
+    book.write_csv('OnProductAlone', 'w')
+    book.write_csv('OnProductAppend')
+    # book.to_csv('OneProductAlone')
+    # book.to_csv('OneProductAppend')
 
     # play with Category class
     cat_url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
     cat1 = Category(cat_url)
-    cat1.to_csv("cat1")
-    cat1.to_csv("cat1")
+    # cat1.to_csv("cat1")
+    # cat1.to_csv("cat1")
+    cat1.write_csv('cat1')
+    cat1.write_csv('cat1')
 
     # play with Scraper class
     site_url = 'http://books.toscrape.com'
