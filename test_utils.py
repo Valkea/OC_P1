@@ -20,12 +20,26 @@ class TestFileIO:
 
     @classmethod
     def setup_class(cls):
+        try:
+            mkdir('testzone')
+        except Exception:
+            pass
+
+        chdir('testzone')
         cls.cwd = getcwd()
+
+    @classmethod
+    def teardown_class(cls):
+        chdir('..')
+        try:
+            rmdir('testzone')
+        except Exception:
+            pass
 
     def test_init_root(self):
         dirname = 'testinit'
         assert getcwd() == self.cwd
-        FileIO.init_root(dirname)
+        FileIO.init_root(dirname, False)
         assert getcwd() == urljoin(self.cwd+'/', dirname)
         chdir('..')
         assert path.exists(dirname) is True

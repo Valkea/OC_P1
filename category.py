@@ -29,6 +29,12 @@ class Category:
     book_list : list
     links : list
     num_books : int
+    auto_collect: bool
+        determine if the categories are automatically collected
+        when the Category instance is created
+    dl_image : bool
+        determine if the images are downloaded on local
+        drive when scraping the products infos
 
     Methods
     -------
@@ -38,14 +44,15 @@ class Category:
         write the content of the collected books in the given CSV
     """
 
-    def __init__(self, url=None):
+    def __init__(self, url=None, auto_collect=True, dl_image=True):
         self.category_url = url
         self.name = None
         self.book_list = []
         self.links = []
         self.num_books = 0
+        self.dl_image = dl_image
 
-        if url is not None:
+        if url is not None and auto_collect:
             self.collect()
 
     def collect(self):
@@ -135,7 +142,8 @@ class Category:
             book.collect()
             books.append(book)
 
-            book.save_image()
+            if self.dl_image:
+                book.save_image()
 
         progress_monitor.catbooks_update(
                     len(books),

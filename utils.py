@@ -174,22 +174,38 @@ class FileIO:
     """
 
     @staticmethod
-    def init_root(root):
+    def init_root(dirname, reset_cwd=True, delete_prev=True):
         """ remove and re-create (if needed) the <root> folder and enter in it
+
+        Parameters:
+            dirname : str
+                the name of the folder where the data will be written
+            reset_cwd : bool (default is True)
+                determine if the current working directory is set
+                to the original project directory
+            delete_prev : bool (default is True)
+                determine if the <dirname> folder should be removed
+                if it happens to already exist
         """
-        chdir(CURRENT_WORKING_DIRECTORY)
+
+        if dirname == '':
+            return
+
+        if reset_cwd:
+            chdir(CURRENT_WORKING_DIRECTORY)
+
+        if delete_prev:
+            try:
+                rmtree(dirname)
+            except Exception as e:
+                print("FileIO ERROR:", e)
 
         try:
-            rmtree(root)
+            mkdir(dirname)
         except Exception as e:
             print("FileIO ERROR:", e)
 
-        try:
-            mkdir(root)
-        except Exception as e:
-            print("FileIO ERROR:", e)
-
-        chdir(root)
+        chdir(dirname)
 
     @staticmethod
     def open_category(name):

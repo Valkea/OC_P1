@@ -4,24 +4,41 @@
 '''
 The purpose of this module is to test the Category class
 '''
-
+from os import chdir, mkdir, getcwd
 import os.path
 import csv
+from shutil import rmtree
 
 from scraper import Book, Category
+
 
 ##################################################
 # Category
 ##################################################
 
-
 class TestCategory:
 
     @classmethod
     def setup_class(cls):
+        try:
+            mkdir('testzone')
+        except Exception:
+            pass
+
+        chdir('testzone')
+        cls.cwd = getcwd()
+
         url = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
         cls.cat1 = Category(None)
-        cls.cat2 = Category(url)
+        cls.cat2 = Category(url, dl_image=False)
+
+    @classmethod
+    def teardown_class(cls):
+        chdir('..')
+        try:
+            rmtree('testzone')
+        except Exception:
+            pass
 
     # def test_empty_init(self):
     #    with pytest.raises(Exception):
