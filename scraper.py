@@ -159,6 +159,16 @@ if __name__ == '__main__':
         site = Scraper(site_url)
         progress_monitor.complete()
 
+    elif(args.slide == 4):
+        # play with FileIO class
+        print("This scrape an image")
+        print("You can check the generated files in demo/slide4")
+
+        move_to_path('demo/slide4')
+
+        image_url = 'http://books.toscrape.com/media/cache/a3/9e/a39e7c5c9fc61c2ae0f81116aa8cbb0e.jpg'
+        FileIO.download_image(image_url, 'demo.jpg')
+
     else:
         # Scrap the website
         site_url = 'http://books.toscrape.com'
