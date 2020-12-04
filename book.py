@@ -227,9 +227,17 @@ class Book():
         except Exception:
             raise(Exception(f"Can't find the File type ::\
                     \n{self.product_page_url}"))
+ 
+        pic_name = self.title
 
-        pic_name = self.title + self.image_url[extpos:]
-        pic_name = pic_name.replace(' ', '_').replace(
-                                    '/', '_').replace('\\', '_')
+        invalid1 = " "
+        invalid2 = ".\"<>|#&’?!'`:,/\\"
+
+        for char in invalid1:
+            pic_name = pic_name.replace(char, '_')
+        for char in invalid2:
+            pic_name = pic_name.replace(char, '')
+
+        pic_name += self.image_url[extpos:]
 
         return pic_name
