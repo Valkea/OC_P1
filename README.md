@@ -52,7 +52,13 @@ You can also use the '-s' or '--slide' parameter to test some specific parts of 
 ```
 ```bash
 >>> python3 scraper.py --slide 3
+'This runs the whole website scraping'
 'You can check the generated files in demo/slide3'
+```
+```bash
+>>> python3 scraper.py --slide 4
+'This scrape an image'
+'You can check the generated files in demo/slide4'
 ```
 
 ## Tests
